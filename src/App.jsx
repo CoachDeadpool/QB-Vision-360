@@ -439,7 +439,8 @@ const SUBJECTS = [
         ],
       },
       {
-        title: "Common fronts: 4-3, 3-4, and CFL-style over/under looks",
+        title: "Common fronts: 4-3, 3-4, and Over/Under looks",
+        note: "To keep it simple: Over and Under just describe which side of the tight end the 3-technique tackle lines up on. If he's on the tight end's side, it's Over. If he's shaded away from the tight end, it's Under.",
         items: [
           {
             kind: "rich", name: "4-3 Front",
@@ -488,22 +489,23 @@ const SUBJECTS = [
             coachingKey: "Don't lock onto one side of the formation — a 3-4's disguise works best against QBs who stop scanning early.",
           },
           {
-            kind: "rich", name: "CFL Over/Under Shift",
+            kind: "rich", name: "Over / Under Front",
             diagramConfig: {
-              title: "CFL Over/Under Shift", zoneMode: "none",
+              title: "Over / Under Front", zoneMode: "none",
               dl: [150, 175, 200, 225], lb: [150, 210],
               shift: { side: "left" },
               markers: [],
             },
-            summary: "Canadian defensive lines often shift their strength toward the field's wide or short side rather than staying balanced.",
+            summary: "Over and Under describe which side the 3-technique tackle lines up on relative to the tight end (strong side).",
             badgesLabel: "STRUCTURE",
             badges: [
-              { label: "OVER", text: "Line shaded to strength side" }, { label: "UNDER", text: "Line shaded away from strength" },
+              { label: "OVER", text: "3-tech to strong side, 1-tech weak side" },
+              { label: "UNDER", text: "3-tech to weak side, 1-tech/nose strong side" },
             ],
             keyLabel: "HOW TO BEAT IT",
-            keyText: "The extra run defender lines up on the side the front is shaded toward — expect more room to the opposite side.",
-            qbRead: "Check which side the line is shaded to pre-snap; it tells you where the extra gap defender is and where the room is.",
-            coachingKey: "Use this shift to help pick your run-play direction or find the softer coverage side on pass plays.",
+            keyText: "Whichever side isn't filled by the 3-technique has more natural room.",
+            qbRead: "Find the tight end, then find the 3-technique — aligned to the TE is Over, shaded away is Under.",
+            coachingKey: "It's about interior gap leverage, not field width.",
           },
         ],
       },
