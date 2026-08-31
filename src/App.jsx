@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, X as XIcon } from "lucide-react";
+import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, X as XIcon } from "lucide-react";
 
 const TOKENS = {
   navyDeep: "#0f1d33",
@@ -985,6 +985,22 @@ const SUPPORT_URL = ""; // add a real Ko-fi / Buy Me a Coffee / PayPal.me link h
 // file's source can see the passcode. Replace with real backend auth
 // before relying on this for anything sensitive.
 const COACH_PASSCODE = "Oscar123";
+
+const BADGES = [
+  { id: "first-steps", name: "First Steps", description: "Complete your first lesson.", icon: BookOpen, check: (s) => s.completedLessons >= 1 },
+  { id: "getting-started", name: "Getting Started", description: "Complete 5 lessons.", icon: BookOpen, check: (s) => s.completedLessons >= 5 },
+  { id: "bookworm", name: "Bookworm", description: "Complete 25 lessons.", icon: Brain, check: (s) => s.completedLessons >= 25 },
+  { id: "completionist", name: "Completionist", description: "Complete every lesson in the app.", icon: Trophy, check: (s) => s.totalLessons > 0 && s.completedLessons >= s.totalLessons },
+  { id: "subject-master", name: "Subject Master", description: "Complete every lesson in at least one subject.", icon: Target, check: (s) => s.anySubjectComplete },
+  { id: "well-rounded", name: "Well-Rounded", description: "Complete at least one lesson in every subject.", icon: Users, check: (s) => s.everySubjectStarted },
+  { id: "drill-sergeant", name: "Drill Sergeant", description: "Hit your target reps on any drill.", icon: Footprints, check: (s) => s.anyDrillMaxed },
+  { id: "iron-arm", name: "Iron Arm", description: "Hit your target reps on all four drills.", icon: Activity, check: (s) => s.allDrillsMaxed },
+  { id: "goal-setter", name: "Goal Setter", description: "Set your season goal in Build a Plan.", icon: Flag, check: (s) => !!(s.plan.seasonGoal && s.plan.seasonGoal.trim()) },
+  { id: "locked-in", name: "Locked In", description: "Pick 3 focus areas in Build a Plan.", icon: CheckSquare, check: (s) => s.plan.focusAreas.length >= 3 },
+  { id: "reflective", name: "Reflective", description: "Log 5 entries in your Reflection Log.", icon: BookOpen, check: (s) => s.reflections.length >= 5 },
+  { id: "milestone-maker", name: "Milestone Maker", description: "Complete a milestone in Build a Plan.", icon: Trophy, check: (s) => s.milestones.some((m) => m.done) },
+  { id: "profile-complete", name: "Profile Complete", description: "Fill out your full Build Your Profile.", icon: User, check: (s) => PROFILE_QUESTIONS.every((q) => s.profile[q.id] && s.profile[q.id].trim()) },
+];
 
 const JOKES = [
   "Why did the coach go to the bank? To get his quarterback.",
@@ -2132,6 +2148,7 @@ export default function App() {
     { id: "questions", label: "Ask Coach" },
     { id: "plan", label: "Build a Plan" },
     { id: "profile", label: "Build Your Profile" },
+    { id: "achievements", label: "Achievements" },
   ];
 
   return (
@@ -3563,6 +3580,76 @@ export default function App() {
             )}
           </div>
         )}
+
+        {tab === "achievements" && (() => {
+          const totalLessons = SUBJECTS.reduce((sum, s) => sum + s.lessons.length, 0);
+          const completedLessons = SUBJECTS.reduce((sum, s) => {
+            const done = progress[s.id] || {};
+            return sum + s.lessons.filter((_, i) => done[i]).length;
+          }, 0);
+          const anySubjectComplete = SUBJECTS.some((s) => {
+            const done = progress[s.id] || {};
+            return s.lessons.length > 0 && s.lessons.every((_, i) => done[i]);
+          });
+          const everySubjectStarted = SUBJECTS.every((s) => {
+            const done = progress[s.id] || {};
+            return s.lessons.some((_, i) => done[i]);
+          });
+          const anyDrillMaxed = DRILLS.some((d) => (drillReps[d.id] || 0) >= d.target);
+          const allDrillsMaxed = DRILLS.every((d) => (drillReps[d.id] || 0) >= d.target);
+
+          const state = {
+            completedLessons, totalLessons, anySubjectComplete, everySubjectStarted,
+            anyDrillMaxed, allDrillsMaxed, plan, reflections, milestones, profile,
+          };
+
+          const earnedCount = BADGES.filter((b) => b.check(state)).length;
+
+          return (
+            <div>
+              <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
+                Achievements
+              </h1>
+              <p style={{ color: TOKENS.inkSoft, marginBottom: 22, fontSize: 14.5 }}>
+                {earnedCount} of {BADGES.length} badges earned. Keep training to unlock the rest.
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+                {BADGES.map((b) => {
+                  const earned = b.check(state);
+                  const Icon = b.icon;
+                  return (
+                    <div
+                      key={b.id}
+                      style={{
+                        background: earned ? TOKENS.navyMid : "#fff",
+                        border: `1px solid ${earned ? TOKENS.navyLine : TOKENS.creamLine}`,
+                        borderRadius: 6, padding: 16, position: "relative", opacity: earned ? 1 : 0.7,
+                      }}
+                    >
+                      <div style={{
+                        width: 40, height: 40, borderRadius: "50%",
+                        background: earned ? TOKENS.navyDeep : TOKENS.cream,
+                        border: `2px solid ${earned ? TOKENS.gold : TOKENS.creamLine}`,
+                        display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12,
+                      }}>
+                        {earned ? <Icon size={18} color={TOKENS.gold} /> : <Lock size={16} color={TOKENS.inkSoft} />}
+                      </div>
+                      <div style={{
+                        fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, marginBottom: 4,
+                        color: earned ? TOKENS.cream : TOKENS.ink,
+                      }}>
+                        {b.name}
+                      </div>
+                      <div style={{ fontSize: 12, color: earned ? TOKENS.creamLine : TOKENS.inkSoft, lineHeight: 1.4 }}>
+                        {b.description}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
 
         {tab === "coach" && (() => {
           if (!coachUnlocked) {
