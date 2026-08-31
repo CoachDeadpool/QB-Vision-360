@@ -980,6 +980,12 @@ const SUBJECTS = [
 
 const SUPPORT_URL = ""; // add a real Ko-fi / Buy Me a Coffee / PayPal.me link here
 
+// NOTE: this is a basic client-side passcode gate, not real authentication.
+// It keeps casual players out of Coach View, but anyone who reads this
+// file's source can see the passcode. Replace with real backend auth
+// before relying on this for anything sensitive.
+const COACH_PASSCODE = "Oscar123";
+
 const JOKES = [
   "Why did the coach go to the bank? To get his quarterback.",
   "Why don't quarterbacks get cold on the sideline? They've always got a lot of fans.",
@@ -1775,7 +1781,7 @@ function ExampleFilmCard({ film }) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState("lessons");
+  const [tab, setTab] = useState("home");
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [progress, setProgress] = useState({});
@@ -1797,6 +1803,13 @@ export default function App() {
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizResults, setQuizResults] = useState([]);
   const [showCoachView, setShowCoachView] = useState(false);
+  const [showQuestionsCoachView, setShowQuestionsCoachView] = useState(false);
+  const [showFilmCoachView, setShowFilmCoachView] = useState(false);
+  const [coachUnlocked, setCoachUnlocked] = useState(false);
+  const [showPasscodePrompt, setShowPasscodePrompt] = useState(false);
+  const [pendingCoachAction, setPendingCoachAction] = useState(null);
+  const [passcodeDraft, setPasscodeDraft] = useState("");
+  const [passcodeError, setPasscodeError] = useState(false);
   const [plan, setPlan] = useState({ seasonGoal: "", focusAreas: [] });
   const [goalDraft, setGoalDraft] = useState("");
   const [editingGoal, setEditingGoal] = useState(true);
@@ -1824,11 +1837,11 @@ export default function App() {
         if (d) setDrillReps(JSON.parse(d.value));
       } catch (e) {}
       try {
-        const f = await window.storage.get("qbv360-filmroom", false);
+        const f = await window.storage.get("qbv360-filmroom", true);
         if (f) setFilmLog(JSON.parse(f.value));
       } catch (e) {}
       try {
-        const q = await window.storage.get("qbv360-questions", false);
+        const q = await window.storage.get("qbv360-questions", true);
         if (q) setQuestions(JSON.parse(q.value));
       } catch (e) {}
       try {
@@ -1919,7 +1932,7 @@ export default function App() {
       status: clipQuestionDraft.trim() ? "Pending" : null,
     };
     const next = [entry, ...filmLog];
-    persist("qbv360-filmroom", next, setFilmLog);
+    persist("qbv360-filmroom", next, setFilmLog, true);
     setPendingClip(null);
     setNoteDraft("");
     setClipQuestionDraft("");
@@ -1936,7 +1949,7 @@ export default function App() {
       status: "Pending",
     };
     const next = [entry, ...questions];
-    persist("qbv360-questions", next, setQuestions);
+    persist("qbv360-questions", next, setQuestions, true);
     setQuestionDraft("");
   }
 
@@ -1994,6 +2007,33 @@ export default function App() {
       date: new Date().toLocaleString(),
     };
     persist("qbv360-quiz-results", [entry, ...quizResults], setQuizResults, true);
+  }
+
+  function requestCoachView(which) {
+    const isShowing = which === "quiz" ? showCoachView : which === "questions" ? showQuestionsCoachView : showFilmCoachView;
+    if (coachUnlocked || isShowing) {
+      if (which === "quiz") setShowCoachView(!showCoachView);
+      else if (which === "questions") setShowQuestionsCoachView(!showQuestionsCoachView);
+      else setShowFilmCoachView(!showFilmCoachView);
+      return;
+    }
+    setPendingCoachAction(which);
+    setPasscodeDraft("");
+    setPasscodeError(false);
+    setShowPasscodePrompt(true);
+  }
+
+  function submitPasscode() {
+    if (passcodeDraft === COACH_PASSCODE) {
+      setCoachUnlocked(true);
+      setShowPasscodePrompt(false);
+      if (pendingCoachAction === "quiz") setShowCoachView(true);
+      else if (pendingCoachAction === "questions") setShowQuestionsCoachView(true);
+      else if (pendingCoachAction === "film") setShowFilmCoachView(true);
+      setPendingCoachAction(null);
+    } else {
+      setPasscodeError(true);
+    }
   }
 
   function saveGoal() {
@@ -2089,21 +2129,29 @@ export default function App() {
       {/* Header */}
       <header style={{ background: TOKENS.navyDeep, borderBottom: `3px solid ${TOKENS.gold}` }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "18px 20px", display: "flex", alignItems: "center", gap: 14 }}>
-          <CompassMark size={52} />
-          <div style={{ flex: 1 }}>
-            <div style={{
-              fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: 1,
-              color: TOKENS.gold, lineHeight: 1.1,
-            }}>
-              QB VISION 360
+          <button
+            onClick={() => { setTab("home"); setSelectedSubject(null); setExpandedLesson(null); }}
+            style={{
+              display: "flex", alignItems: "center", gap: 14, flex: 1, background: "none", border: "none",
+              cursor: "pointer", padding: 0, textAlign: "left",
+            }}
+          >
+            <CompassMark size={52} />
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: 1,
+                color: TOKENS.gold, lineHeight: 1.1,
+              }}>
+                QB VISION 360
+              </div>
+              <div style={{
+                fontFamily: "'IBM Plex Mono', monospace", fontSize: 10.5, letterSpacing: 2,
+                color: TOKENS.creamLine, textTransform: "uppercase",
+              }}>
+                Precision starts with a vision
+              </div>
             </div>
-            <div style={{
-              fontFamily: "'IBM Plex Mono', monospace", fontSize: 10.5, letterSpacing: 2,
-              color: TOKENS.creamLine, textTransform: "uppercase",
-            }}>
-              Precision starts with a vision
-            </div>
-          </div>
+          </button>
           <button
             onClick={() => { setTab("about"); setSelectedSubject(null); setExpandedLesson(null); }}
             style={{
@@ -2140,6 +2188,151 @@ export default function App() {
 
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "28px 20px 60px" }}>
         <JokeBanner key={tab} />
+
+        {tab === "home" && (() => {
+          const totalLessons = SUBJECTS.reduce((sum, s) => sum + s.lessons.length, 0);
+          const completedLessons = SUBJECTS.reduce((sum, s) => {
+            const done = progress[s.id] || {};
+            return sum + s.lessons.filter((_, i) => done[i]).length;
+          }, 0);
+          const overallPct = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+          const hasProfile = profile.name && profile.name.trim();
+
+          const quickLinks = [
+            { id: "lessons", label: "Lessons", icon: BookOpen, desc: `${SUBJECTS.length} subjects to explore` },
+            { id: "drills", label: "Drills", icon: Footprints, desc: "Log your reps" },
+            { id: "quiz", label: "Quiz", icon: Brain, desc: "Test yourself" },
+            { id: "plan", label: "Build a Plan", icon: Target, desc: "Set your goal" },
+          ];
+
+          return (
+            <div>
+              <div style={{
+                background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`, borderRadius: 8,
+                padding: "36px 24px", textAlign: "center", color: TOKENS.cream, marginBottom: 24,
+              }}>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                  <CompassMark size={76} />
+                </div>
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, color: TOKENS.gold, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" }}>
+                  {hasProfile ? `Welcome back, ${profile.name.split(" ")[0]}` : "Welcome to QB Vision 360"}
+                </div>
+                <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 27, fontWeight: 700, margin: "0 0 12px" }}>
+                  See the field. Read the game.
+                </h1>
+                <p style={{ fontSize: 14, color: TOKENS.creamLine, maxWidth: 520, margin: "0 auto 22px", lineHeight: 1.6 }}>
+                  Mechanics and football IQ, side by side — built specifically for young quarterbacks learning the Canadian game.
+                </p>
+                <button
+                  onClick={() => setTab(hasProfile ? "lessons" : "profile")}
+                  style={{
+                    fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 0.5,
+                    padding: "12px 28px", background: TOKENS.gold, color: TOKENS.navyDeep, border: "none",
+                    borderRadius: 5, cursor: "pointer",
+                  }}
+                >
+                  {hasProfile ? "Continue Training" : "Get Started"}
+                </button>
+              </div>
+
+              {totalLessons > 0 && completedLessons > 0 && (
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 16, background: "#fff",
+                  border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "16px 20px", marginBottom: 24,
+                }}>
+                  <DialProgress percent={overallPct} size={58} />
+                  <div>
+                    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600 }}>
+                      Overall Progress
+                    </div>
+                    <div style={{ fontSize: 12.5, color: TOKENS.inkSoft }}>
+                      {completedLessons} of {totalLessons} lessons complete across all subjects
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div style={{
+                fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600, color: TOKENS.inkSoft,
+                textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 12,
+              }}>
+                Jump In
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
+                {quickLinks.map((q) => {
+                  const Icon = q.icon;
+                  return (
+                    <button
+                      key={q.id}
+                      onClick={() => { setTab(q.id); setSelectedSubject(null); setExpandedLesson(null); }}
+                      style={{
+                        textAlign: "left", background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`,
+                        borderRadius: 6, padding: 16, cursor: "pointer", color: TOKENS.cream,
+                      }}
+                    >
+                      <div style={{
+                        width: 34, height: 34, borderRadius: "50%", background: TOKENS.navyDeep,
+                        border: `2px solid ${TOKENS.gold}`, display: "flex", alignItems: "center", justifyContent: "center",
+                        marginBottom: 10,
+                      }}>
+                        <Icon size={15} color={TOKENS.gold} />
+                      </div>
+                      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14.5, fontWeight: 600, marginBottom: 2 }}>
+                        {q.label}
+                      </div>
+                      <div style={{ fontSize: 11.5, color: TOKENS.creamLine }}>{q.desc}</div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {!hasProfile && (
+                <div style={{
+                  marginTop: 20, fontSize: 12.5, color: TOKENS.inkSoft, textAlign: "center", fontStyle: "italic",
+                }}>
+                  Tip: filling out your profile helps us tailor content to your age and skill level.
+                </div>
+              )}
+
+              <div style={{ background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`, borderRadius: 6, padding: 24, color: TOKENS.cream, marginTop: 28 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+                  <div style={{
+                    width: 46, height: 46, borderRadius: "50%", background: TOKENS.navyDeep,
+                    border: `2px solid ${TOKENS.gold}`, display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <User size={20} color={TOKENS.gold} />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 19, fontWeight: 700 }}>
+                      Meet the Coach
+                    </div>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.creamLine, letterSpacing: 0.5, marginTop: 2 }}>
+                      Dan Carnevale <span style={{ fontWeight: 400, opacity: 0.85 }}>a.k.a. Coach Deadpool</span>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 14.5, lineHeight: 1.6 }}>
+                  <p style={{ margin: 0 }}>
+                    Born and raised in Mississauga, Ontario, I got into football late — not until grade 12 — but it stuck. I went on to play CIS football at Acadia University, and after that I kept playing overseas in Germany.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    I started coaching three years ago, when my oldest son (born 2011) was in grade 7, and it didn't take long to notice a real gap in how young quarterbacks were being developed — not just in technique, but in actually understanding the game itself. There were plenty of QB camps and drill videos out there, but very few coaches were teaching the position <em>and</em> the game together.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Because I work in AI and technology, it seemed like a great chance to build this app myself.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    QB Vision 360 came out of that gap — a place for young quarterbacks to build both the mechanics and the football IQ side by side, built specifically for the Canadian game.
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Football has given me a lot, and I hope to give back.
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {tab === "lessons" && selectedSubject === null && (
           <div>
             <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4, color: TOKENS.ink }}>
@@ -2481,9 +2674,21 @@ export default function App() {
 
         {tab === "film" && (
           <div>
-            <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
-              Film Room
-            </h1>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 12 }}>
+              <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700 }}>Film Room</h1>
+              <button
+                onClick={() => requestCoachView("film")}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6, flexShrink: 0,
+                  fontFamily: "'Oswald', sans-serif", fontSize: 12.5, fontWeight: 600,
+                  background: showFilmCoachView ? TOKENS.navyMid : "transparent",
+                  color: showFilmCoachView ? TOKENS.gold : TOKENS.navyMid,
+                  border: `1px solid ${TOKENS.navyMid}`, borderRadius: 4, padding: "7px 12px", cursor: "pointer",
+                }}
+              >
+                <Trophy size={13} /> {showFilmCoachView ? "Hide Coach View" : "Coach View"}
+              </button>
+            </div>
             <p style={{ color: TOKENS.inkSoft, marginBottom: 22, fontSize: 14.5 }}>
               Upload a throwing clip, add notes or ask a question about it, and build a log over time.
             </p>
@@ -2587,56 +2792,58 @@ export default function App() {
               )}
             </div>
 
-            <div>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, marginBottom: 10, color: TOKENS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
-                Your Film Log
-              </div>
-              {filmLog.length === 0 && (
-                <div style={{ fontSize: 13.5, color: TOKENS.inkSoft, fontStyle: "italic" }}>
-                  No clips logged yet — your saved notes will show up here.
+            {showFilmCoachView && (
+              <div>
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, marginBottom: 10, color: TOKENS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                  All Submitted Film
                 </div>
-              )}
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {filmLog.map((clip) => (
-                  <div key={clip.id} style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "12px 14px", display: "flex", gap: 12, alignItems: "flex-start" }}>
-                    <div style={{
-                      width: 30, height: 30, borderRadius: "50%", background: TOKENS.navyMid, flexShrink: 0,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <Play size={13} color={TOKENS.gold} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-                        <span style={{ fontSize: 13.5, fontWeight: 600 }}>{clip.name}</span>
-                        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.inkSoft, whiteSpace: "nowrap" }}>{clip.date}</span>
-                      </div>
-                      {clip.notes && <div style={{ fontSize: 13, color: TOKENS.inkSoft, marginTop: 4 }}>{clip.notes}</div>}
-                      {clip.question && (
-                        <div style={{
-                          marginTop: 8, background: TOKENS.cream, border: `1px solid ${TOKENS.creamLine}`,
-                          borderRadius: 4, padding: "8px 10px",
-                        }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
-                            <MessageCircleQuestion size={12} color={TOKENS.navyMid} />
-                            <span style={{
-                              fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 0.5,
-                              color: TOKENS.gold, background: TOKENS.navyMid, padding: "1px 7px", borderRadius: 9,
-                              textTransform: "uppercase",
-                            }}>
-                              {clip.status || "Pending"}
-                            </span>
-                          </div>
-                          <div style={{ fontSize: 13, fontStyle: "italic" }}>{clip.question}</div>
-                        </div>
-                      )}
-                    </div>
+                {filmLog.length === 0 && (
+                  <div style={{ fontSize: 13.5, color: TOKENS.inkSoft, fontStyle: "italic" }}>
+                    No clips logged yet — submitted notes and questions will show up here.
                   </div>
-                ))}
+                )}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {filmLog.map((clip) => (
+                    <div key={clip.id} style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "12px 14px", display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <div style={{
+                        width: 30, height: 30, borderRadius: "50%", background: TOKENS.navyMid, flexShrink: 0,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Play size={13} color={TOKENS.gold} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                          <span style={{ fontSize: 13.5, fontWeight: 600 }}>{clip.name}</span>
+                          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.inkSoft, whiteSpace: "nowrap" }}>{clip.date}</span>
+                        </div>
+                        {clip.notes && <div style={{ fontSize: 13, color: TOKENS.inkSoft, marginTop: 4 }}>{clip.notes}</div>}
+                        {clip.question && (
+                          <div style={{
+                            marginTop: 8, background: TOKENS.cream, border: `1px solid ${TOKENS.creamLine}`,
+                            borderRadius: 4, padding: "8px 10px",
+                          }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                              <MessageCircleQuestion size={12} color={TOKENS.navyMid} />
+                              <span style={{
+                                fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 0.5,
+                                color: TOKENS.gold, background: TOKENS.navyMid, padding: "1px 7px", borderRadius: 9,
+                                textTransform: "uppercase",
+                              }}>
+                                {clip.status || "Pending"}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: 13, fontStyle: "italic" }}>{clip.question}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontSize: 11.5, color: TOKENS.inkSoft, marginTop: 14, fontStyle: "italic" }}>
+                  Note: this prototype doesn't store the video file itself — only the filename, notes, and any question submitted with it.
+                </div>
               </div>
-              <div style={{ fontSize: 11.5, color: TOKENS.inkSoft, marginTop: 14, fontStyle: "italic" }}>
-                Note: this prototype keeps video previews in-session only — filenames and notes are what's saved to your log.
-              </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -2648,7 +2855,7 @@ export default function App() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 12 }}>
                 <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700 }}>Quiz</h1>
                 <button
-                  onClick={() => setShowCoachView(!showCoachView)}
+                  onClick={() => requestCoachView("quiz")}
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 6, flexShrink: 0,
                     fontFamily: "'Oswald', sans-serif", fontSize: 12.5, fontWeight: 600,
@@ -2805,9 +3012,21 @@ export default function App() {
 
         {tab === "questions" && (
           <div>
-            <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
-              Ask the QB Coach
-            </h1>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 12 }}>
+              <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700 }}>Ask the QB Coach</h1>
+              <button
+                onClick={() => requestCoachView("questions")}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6, flexShrink: 0,
+                  fontFamily: "'Oswald', sans-serif", fontSize: 12.5, fontWeight: 600,
+                  background: showQuestionsCoachView ? TOKENS.navyMid : "transparent",
+                  color: showQuestionsCoachView ? TOKENS.gold : TOKENS.navyMid,
+                  border: `1px solid ${TOKENS.navyMid}`, borderRadius: 4, padding: "7px 12px", cursor: "pointer",
+                }}
+              >
+                <Trophy size={13} /> {showQuestionsCoachView ? "Hide Coach View" : "Coach View"}
+              </button>
+            </div>
             <p style={{ color: TOKENS.inkSoft, marginBottom: 22, fontSize: 14.5 }}>
               Stuck on a read, a rule, or a drill? Submit it here and it'll be waiting for your coach at your next session.
             </p>
@@ -2840,36 +3059,41 @@ export default function App() {
               >
                 <Send size={14} /> Submit Question
               </button>
+              <div style={{ fontSize: 11, color: TOKENS.inkSoft, marginTop: 10, fontStyle: "italic" }}>
+                Submitted questions are shared and reviewed by the coach behind QB Vision 360.
+              </div>
             </div>
 
-            <div>
-              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, marginBottom: 10, color: TOKENS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
-                Your Submitted Questions
-              </div>
-              {questions.length === 0 && (
-                <div style={{ fontSize: 13.5, color: TOKENS.inkSoft, fontStyle: "italic" }}>
-                  No questions submitted yet — anything you ask will show up here.
+            {showQuestionsCoachView && (
+              <div>
+                <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, marginBottom: 10, color: TOKENS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                  All Submitted Questions
                 </div>
-              )}
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {questions.map((q) => (
-                  <div key={q.id} style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "12px 14px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
-                      <span style={{
-                        display: "inline-flex", alignItems: "center", gap: 4,
-                        fontFamily: "'IBM Plex Mono', monospace", fontSize: 10.5, letterSpacing: 0.5,
-                        color: TOKENS.gold, background: TOKENS.navyMid, padding: "2px 8px", borderRadius: 10,
-                        textTransform: "uppercase",
-                      }}>
-                        <Clock size={11} /> {q.status}
-                      </span>
-                      <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.inkSoft, whiteSpace: "nowrap" }}>{q.date}</span>
-                    </div>
-                    <div style={{ fontSize: 13.5, lineHeight: 1.4 }}>{q.text}</div>
+                {questions.length === 0 && (
+                  <div style={{ fontSize: 13.5, color: TOKENS.inkSoft, fontStyle: "italic" }}>
+                    No questions submitted yet — anything asked will show up here.
                   </div>
-                ))}
+                )}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {questions.map((q) => (
+                    <div key={q.id} style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "12px 14px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          fontFamily: "'IBM Plex Mono', monospace", fontSize: 10.5, letterSpacing: 0.5,
+                          color: TOKENS.gold, background: TOKENS.navyMid, padding: "2px 8px", borderRadius: 10,
+                          textTransform: "uppercase",
+                        }}>
+                          <Clock size={11} /> {q.status}
+                        </span>
+                        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.inkSoft, whiteSpace: "nowrap" }}>{q.date}</span>
+                      </div>
+                      <div style={{ fontSize: 13.5, lineHeight: 1.4 }}>{q.text}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -3320,47 +3544,11 @@ export default function App() {
         {tab === "about" && (
           <div>
             <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
-              About QB Vision 360
+              Parents & Coaches
             </h1>
             <p style={{ color: TOKENS.inkSoft, marginBottom: 24, fontSize: 14.5 }}>
-              For parents and coaches — the story and the person behind the app.
+              Feedback, suggestions, and ways to support the project.
             </p>
-
-            <div style={{ background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`, borderRadius: 6, padding: 24, color: TOKENS.cream, marginBottom: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                <div style={{
-                  width: 46, height: 46, borderRadius: "50%", background: TOKENS.navyDeep,
-                  border: `2px solid ${TOKENS.gold}`, display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                  <User size={20} color={TOKENS.gold} />
-                </div>
-                <div>
-                  <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 19, fontWeight: 700 }}>
-                    Meet the Coach
-                  </div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11.5, color: TOKENS.creamLine, letterSpacing: 0.5, marginTop: 2 }}>
-                    Dan Carnevale <span style={{ fontWeight: 400, opacity: 0.85 }}>a.k.a. Coach Deadpool</span>
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 14, fontSize: 14.5, lineHeight: 1.6 }}>
-                <p style={{ margin: 0 }}>
-                  Born and raised in Mississauga, Ontario, I got into football late — not until grade 12 — but it stuck. I went on to play CIS football at Acadia University, and after that I kept playing overseas in Germany.
-                </p>
-                <p style={{ margin: 0 }}>
-                  I started coaching three years ago, when my oldest son (born 2011) was in grade 7, and it didn't take long to notice a real gap in how young quarterbacks were being developed — not just in technique, but in actually understanding the game itself. There were plenty of QB camps and drill videos out there, but very few coaches were teaching the position <em>and</em> the game together.
-                </p>
-                <p style={{ margin: 0 }}>
-                  Because I work in AI and technology, it seemed like a great chance to build this app myself.
-                </p>
-                <p style={{ margin: 0 }}>
-                  QB Vision 360 came out of that gap — a place for young quarterbacks to build both the mechanics and the football IQ side by side, built specifically for the Canadian game.
-                </p>
-                <p style={{ margin: 0 }}>
-                  Football has given me a lot, and I hope to give back.
-                </p>
-              </div>
-            </div>
 
             <div style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: 20, marginBottom: 20 }}>
               <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, marginBottom: 6 }}>
@@ -3456,6 +3644,68 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {showPasscodePrompt && (
+        <div
+          style={{
+            position: "fixed", inset: 0, background: "rgba(15,29,51,0.7)", display: "flex",
+            alignItems: "center", justifyContent: "center", padding: 20, zIndex: 100,
+          }}
+          onClick={() => setShowPasscodePrompt(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: "#fff", borderRadius: 8, padding: 24, maxWidth: 320, width: "100%" }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <Trophy size={16} color={TOKENS.navyMid} />
+              <span style={{ fontFamily: "'Oswald', sans-serif", fontSize: 16, fontWeight: 700 }}>Coach View</span>
+            </div>
+            <p style={{ fontSize: 12.5, color: TOKENS.inkSoft, marginBottom: 14 }}>
+              Enter the coach passcode to continue.
+            </p>
+            <input
+              type="password"
+              autoFocus
+              value={passcodeDraft}
+              onChange={(e) => { setPasscodeDraft(e.target.value); setPasscodeError(false); }}
+              onKeyDown={(e) => { if (e.key === "Enter") submitPasscode(); }}
+              placeholder="Passcode"
+              style={{
+                width: "100%", padding: 10, border: `1px solid ${passcodeError ? TOKENS.red : TOKENS.creamLine}`,
+                borderRadius: 4, fontFamily: "'Inter', sans-serif", fontSize: 14, boxSizing: "border-box", marginBottom: 8,
+              }}
+            />
+            {passcodeError && (
+              <div style={{ fontSize: 12, color: TOKENS.red, marginBottom: 8 }}>
+                That's not right — try again.
+              </div>
+            )}
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              <button
+                onClick={submitPasscode}
+                style={{
+                  flex: 1, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600,
+                  padding: "9px 14px", background: TOKENS.navyMid, color: TOKENS.gold, border: "none",
+                  borderRadius: 4, cursor: "pointer",
+                }}
+              >
+                Unlock
+              </button>
+              <button
+                onClick={() => setShowPasscodePrompt(false)}
+                style={{
+                  fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600,
+                  padding: "9px 14px", background: "transparent", color: TOKENS.inkSoft,
+                  border: `1px solid ${TOKENS.creamLine}`, borderRadius: 4, cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
