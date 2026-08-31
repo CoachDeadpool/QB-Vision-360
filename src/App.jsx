@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, X as XIcon } from "lucide-react";
+import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, TrendingUp, X as XIcon } from "lucide-react";
 
 const TOKENS = {
   navyDeep: "#0f1d33",
@@ -976,6 +976,44 @@ const SUBJECTS = [
       },
     ],
   },
+  {
+    id: "nextlevel",
+    title: "Path to the Next Level",
+    icon: TrendingUp,
+    blurb: "What scouts look for, and how to get seen",
+    lessons: [
+      {
+        title: "What scouts and recruiters look for",
+        items: [
+          { name: "Football IQ and decision-making", description: "Evaluators increasingly value quick, accurate decision-making and pre-snap reads, not just physical tools.", note: "Film that shows you diagnosing coverage and getting the ball out on time stands out more than one big-arm throw." },
+          { name: "Leadership and coachability", description: "How a QB communicates, handles mistakes, and responds to coaching is heavily weighed — it's hard to fake on film or in person.", note: "Camps and combines are also evaluating how you carry yourself, not just your throws." },
+          { name: "Consistency over highlight plays", description: "A body of work showing repeatable, sound mechanics matters more than a handful of highlight-reel throws.", note: "Build a reel that shows a range of throws and reads, not just your best five plays." },
+        ],
+      },
+      {
+        title: "How camps and combines work",
+        items: [
+          { name: "What to expect", description: "Camps typically combine measurable testing (40-yard dash, vertical, etc.) with on-field QB-specific drills and live reps.", note: "Prepare like it's a real evaluation — first impressions start from the very first drill." },
+          { name: "Measurables vs. on-field performance", description: "Numbers get you noticed, but on-field decision-making and accuracy are what get you remembered.", note: "Don't neglect testing prep, but don't let it replace real reps and film study either." },
+        ],
+      },
+      {
+        title: "Building a highlight reel",
+        items: [
+          { name: "What to include", description: "A mix of full plays — not just the throw — showing pre-snap reads, footwork, and release, across different coverages and situations.", note: "Include a few full drives or games, not just cut-up highlights — evaluators want to see decision-making in context." },
+          { name: "Where to host it", description: "Hudl is the standard platform used across Canadian and U.S. recruiting for sharing game and highlight film.", note: "Keep your Hudl link updated in Build Your Profile so it's easy to share when the time comes." },
+          { name: "Length and pacing", description: "A tight, well-organized reel (a few minutes) is more effective than a long, unedited one.", note: "Lead with your strongest, most representative plays first — evaluators often don't watch to the end." },
+        ],
+      },
+      {
+        title: "Understanding the recruiting process",
+        items: [
+          { name: "Start early, stay patient", description: "Recruiting timelines vary widely, and meaningful interest often builds gradually rather than all at once.", note: "Keep training and improving regardless of where you are in the process — that's the part you control." },
+          { name: "Academics matter too", description: "For U Sports and many programs, academic eligibility is just as important as on-field performance.", note: "Keep your grades up alongside your football development — it keeps every door open." },
+        ],
+      },
+    ],
+  },
 ];
 
 const SUPPORT_URL = ""; // add a real Ko-fi / Buy Me a Coffee / PayPal.me link here
@@ -1274,6 +1312,13 @@ const EXAMPLE_FILMS = [
     channel: "Coach Bill Renner",
     videoId: "tWvomGkULFA",
   },
+  {
+    id: "nextlevel",
+    subjectLabel: "Path to the Next Level",
+    title: "College Coach Breakdown: How to Edit Your Football Highlight Reel the Right Way",
+    channel: "Phase 1 Sports & Recruiting",
+    videoId: "DRBESYlLtJw",
+  },
 ];
 
 const PROFILE_QUESTIONS = [
@@ -1326,6 +1371,7 @@ const QUIZ_QUESTIONS = [
   { id: "q23", subjectId: "mentalgame", prompt: "What's the best way to build real confidence as a QB?", options: ["Hyping yourself up before every game", "Reps, preparation, and film study", "Ignoring mistakes completely", "Avoiding pressure situations"], correctIndex: 1 },
   { id: "q24", subjectId: "clocksituational", prompt: "In the CFL, what happens if a punt or missed field goal lands in the end zone and isn't returned out?", options: ["Nothing, the play is dead", "The kicking team gets 1 point (a single/rouge)", "The receiving team gets 3 points", "The play is replayed"], correctIndex: 1 },
   { id: "q25", subjectId: "armcare", prompt: "What should you do if you notice sharp or worsening arm pain (not just normal soreness)?", options: ["Push through it, it'll go away", "Tell a coach or parent about it", "Throw more to loosen it up", "Ignore it until next season" ], correctIndex: 1 },
+  { id: "q26", subjectId: "nextlevel", prompt: "What's generally considered the standard platform for sharing recruiting film in Canadian and U.S. football?", options: ["Instagram", "Hudl", "A personal website only", "Email attachments"], correctIndex: 1 },
 ];
 
 function Cover3Diagram({ variant }) {
@@ -2428,7 +2474,7 @@ export default function App() {
               Lesson Library
             </h1>
             <p style={{ color: TOKENS.inkSoft, marginBottom: 22, fontSize: 14.5 }}>
-              Thirteen subjects built for the Canadian game — three downs, 12 players, and a wider field.
+              Fourteen subjects built for the Canadian game — three downs, 12 players, and a wider field.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
               {SUBJECTS.map((s) => {
