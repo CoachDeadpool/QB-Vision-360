@@ -986,6 +986,16 @@ const SUPPORT_URL = ""; // add a real Ko-fi / Buy Me a Coffee / PayPal.me link h
 // before relying on this for anything sensitive.
 const COACH_PASSCODE = "Oscar123";
 
+const WALKTHROUGH_STEPS = [
+  { icon: null, title: "Welcome to QB Vision 360", body: "A quick look around before you dive in — this'll take about 30 seconds." },
+  { icon: BookOpen, title: "Lessons", body: "13 subjects covering everything from mechanics to reading defenses — built specifically for the Canadian game." },
+  { icon: Footprints, title: "Drills", body: "Log your reps and track progress on footwork, drop timing, pocket movement, and deep balls." },
+  { icon: Brain, title: "Quiz", body: "Test yourself any time — a fresh mix of questions pulled from every subject." },
+  { icon: Target, title: "Build a Plan", body: "Set a season goal, pick your focus areas, and track milestones as you go." },
+  { icon: Play, title: "Film Room & Ask the Coach", body: "Upload a clip, ask a question about it, or ask the coach anything else — it'll be waiting for your next session." },
+  { icon: Trophy, title: "Achievements", body: "Earn badges as you train. Check your progress any time from the Achievements tab." },
+];
+
 const BADGES = [
   { id: "first-steps", name: "First Steps", description: "Complete your first lesson.", icon: BookOpen, check: (s) => s.completedLessons >= 1 },
   { id: "getting-started", name: "Getting Started", description: "Complete 5 lessons.", icon: BookOpen, check: (s) => s.completedLessons >= 5 },
@@ -1826,6 +1836,8 @@ export default function App() {
   const [pendingCoachAction, setPendingCoachAction] = useState(null);
   const [passcodeDraft, setPasscodeDraft] = useState("");
   const [passcodeError, setPasscodeError] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [walkthroughStep, setWalkthroughStep] = useState(0);
   const [plan, setPlan] = useState({ seasonGoal: "", focusAreas: [] });
   const [goalDraft, setGoalDraft] = useState("");
   const [editingGoal, setEditingGoal] = useState(true);
@@ -1898,6 +1910,12 @@ export default function App() {
         const rf = await window.storage.get("qbv360-reflections", false);
         if (rf) setReflections(JSON.parse(rf.value));
       } catch (e) {}
+      try {
+        const ob = await window.storage.get("qbv360-onboarded", false);
+        if (!ob) setShowWalkthrough(true);
+      } catch (e) {
+        setShowWalkthrough(true);
+      }
       setLoaded(true);
     })();
   }, []);
@@ -2037,6 +2055,25 @@ export default function App() {
     setPasscodeDraft("");
     setPasscodeError(false);
     setShowPasscodePrompt(true);
+  }
+
+  function finishWalkthrough() {
+    setShowWalkthrough(false);
+    setWalkthroughStep(0);
+    persist("qbv360-onboarded", "true", () => {});
+  }
+
+  function nextWalkthroughStep() {
+    if (walkthroughStep + 1 >= WALKTHROUGH_STEPS.length) {
+      finishWalkthrough();
+    } else {
+      setWalkthroughStep(walkthroughStep + 1);
+    }
+  }
+
+  function replayWalkthrough() {
+    setWalkthroughStep(0);
+    setShowWalkthrough(true);
   }
 
   function openCoachDashboard() {
@@ -2333,6 +2370,18 @@ export default function App() {
                   Tip: filling out your profile helps us tailor content to your age and skill level.
                 </div>
               )}
+
+              <div style={{ textAlign: "center", marginTop: 16 }}>
+                <button
+                  onClick={replayWalkthrough}
+                  style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    fontSize: 12, color: TOKENS.inkSoft, textDecoration: "underline",
+                  }}
+                >
+                  Take the app tour again
+                </button>
+              </div>
 
               <div style={{ background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`, borderRadius: 6, padding: 24, color: TOKENS.cream, marginTop: 28 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
@@ -3841,6 +3890,88 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {showWalkthrough && (() => {
+        const step = WALKTHROUGH_STEPS[walkthroughStep];
+        const StepIcon = step.icon;
+        const isLast = walkthroughStep === WALKTHROUGH_STEPS.length - 1;
+        return (
+          <div
+            style={{
+              position: "fixed", inset: 0, background: "rgba(15,29,51,0.75)", display: "flex",
+              alignItems: "center", justifyContent: "center", padding: 20, zIndex: 110,
+            }}
+          >
+            <div style={{ background: TOKENS.navyMid, borderRadius: 10, padding: 28, maxWidth: 360, width: "100%", color: TOKENS.cream, textAlign: "center" }}>
+              {StepIcon ? (
+                <div style={{
+                  width: 56, height: 56, borderRadius: "50%", background: TOKENS.navyDeep, margin: "0 auto 16px",
+                  border: `2px solid ${TOKENS.gold}`, display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <StepIcon size={24} color={TOKENS.gold} />
+                </div>
+              ) : (
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                  <CompassMark size={56} />
+                </div>
+              )}
+              <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 19, fontWeight: 700, marginBottom: 8 }}>
+                {step.title}
+              </div>
+              <div style={{ fontSize: 13.5, color: TOKENS.creamLine, lineHeight: 1.55, marginBottom: 22 }}>
+                {step.body}
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 20 }}>
+                {WALKTHROUGH_STEPS.map((_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: i === walkthroughStep ? 18 : 6, height: 6, borderRadius: 3,
+                      background: i === walkthroughStep ? TOKENS.gold : TOKENS.navyLine,
+                      transition: "width 0.2s",
+                    }}
+                  />
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {walkthroughStep > 0 ? (
+                  <button
+                    onClick={() => setWalkthroughStep(walkthroughStep - 1)}
+                    style={{
+                      fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600,
+                      padding: "10px 16px", background: "transparent", color: TOKENS.creamLine,
+                      border: `1px solid ${TOKENS.navyLine}`, borderRadius: 4, cursor: "pointer",
+                    }}
+                  >
+                    Back
+                  </button>
+                ) : (
+                  <button
+                    onClick={finishWalkthrough}
+                    style={{
+                      fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600,
+                      padding: "10px 16px", background: "transparent", color: TOKENS.creamLine,
+                      border: `1px solid ${TOKENS.navyLine}`, borderRadius: 4, cursor: "pointer",
+                    }}
+                  >
+                    Skip
+                  </button>
+                )}
+                <button
+                  onClick={nextWalkthroughStep}
+                  style={{
+                    flex: 1, fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 700,
+                    padding: "10px 16px", background: TOKENS.gold, color: TOKENS.navyDeep, border: "none",
+                    borderRadius: 4, cursor: "pointer",
+                  }}
+                >
+                  {isLast ? "Get Started" : "Next"}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {showPasscodePrompt && (
         <div
