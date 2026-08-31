@@ -50,7 +50,7 @@ const SUBJECTS = [
         items: [
           { name: "Pass protection calls", description: "Pre-snap calls that tell the offensive line which gaps or rushers to prioritize.", note: "Know your protection before the snap so you know where your hot read lives if it breaks down." },
           { name: "Audibles", description: "A new play or adjustment called at the line based on what the defense shows.", note: "Audibles are a tool, not a requirement — only change the play when you have a clear, confident read." },
-          { name: "Route tree", description: "A numbered system (e.g. 1 = flat, 9 = go) used to quickly communicate pass routes.", note: "Learning the route tree numbers speeds up play calls and reduces confusion in the huddle." },
+          { name: "Route tree", routeTreeDiagram: true, description: "A numbered system (e.g. 1 = flat, 9 = go) used to quickly communicate pass routes.", note: "Learning the route tree numbers speeds up play calls and reduces confusion in the huddle." },
         ],
       },
       {
@@ -1562,6 +1562,51 @@ function FormationDiagram({ title, positions }) {
   );
 }
 
+function RouteTreeDiagram() {
+  const origin = { x: 200, y: 208 };
+  const routes = [
+    { num: "0", d: "M 200 208 L 200 183", end: { x: 200, y: 178 } },
+    { num: "1", d: "M 200 208 L 245 193", end: { x: 252, y: 191 } },
+    { num: "2", d: "M 200 208 L 162 180", end: { x: 155, y: 176 } },
+    { num: "3", d: "M 200 208 L 200 165 L 252 160", end: { x: 260, y: 159 } },
+    { num: "4", d: "M 200 208 L 200 158 L 178 174", end: { x: 171, y: 178 } },
+    { num: "5", d: "M 200 208 L 200 143 L 250 149", end: { x: 258, y: 150 } },
+    { num: "6", d: "M 200 208 L 200 148 L 138 143", end: { x: 129, y: 142 } },
+    { num: "7", d: "M 200 208 L 200 138 L 255 108", end: { x: 263, y: 103 } },
+    { num: "8", d: "M 200 208 L 200 138 L 158 98", end: { x: 150, y: 92 } },
+    { num: "9", d: "M 200 208 L 200 45", end: { x: 200, y: 38 } },
+  ];
+  return (
+    <div style={{ background: TOKENS.navyDeep, borderRadius: 6, padding: "14px 10px 10px", marginBottom: 12 }}>
+      <div style={{
+        fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: 1, color: TOKENS.gold,
+        textAlign: "center", textTransform: "uppercase", marginBottom: 8,
+      }}>
+        The Numbered Route Tree
+      </div>
+      <svg width="100%" viewBox="0 0 400 230" role="img" aria-label="Diagram of the numbered route tree, routes 0 through 9">
+        <line x1="0" y1="208" x2="400" y2="208" stroke="#e8dcc4" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.5" />
+        <text x="340" y="221" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fill="#e8dcc4" opacity="0.6">LOS</text>
+        {routes.map((r) => (
+          <path key={r.num} d={r.d} fill="none" stroke={TOKENS.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+        ))}
+        {routes.map((r) => (
+          <g key={`n${r.num}`}>
+            <circle cx={r.end.x} cy={r.end.y} r="9" fill={TOKENS.navyMid} stroke={TOKENS.gold} strokeWidth="1.5" />
+            <text x={r.end.x} y={r.end.y + 3} textAnchor="middle" fontSize="9" fontWeight="700" fill={TOKENS.gold}>{r.num}</text>
+          </g>
+        ))}
+        <circle cx={origin.x} cy={origin.y} r="6" fill={TOKENS.cream} stroke={TOKENS.navyLine} strokeWidth="1" />
+        <circle cx="30" cy="208" r="8" fill="#b23a2c" stroke="#fff" strokeWidth="1.2" />
+        <text x="30" y="211" textAnchor="middle" fontSize="7.5" fontWeight="700" fill="#fff">QB</text>
+      </svg>
+      <div style={{ fontSize: 10.5, color: TOKENS.creamLine, textAlign: "center", marginTop: 4, fontStyle: "italic" }}>
+        0 Hitch · 1 Flat · 2 Slant · 3 Out · 4 Curl · 5 Comeback · 6 Dig · 7 Corner · 8 Post · 9 Go
+      </div>
+    </div>
+  );
+}
+
 function MeshPointDiagram() {
   return (
     <div style={{ background: TOKENS.navyDeep, borderRadius: 6, padding: "14px 10px 10px", marginBottom: 12 }}>
@@ -2709,6 +2754,7 @@ export default function App() {
                                 {item.formationDiagram && <FormationDiagram {...item.formationDiagram} />}
                                 {item.positionsMap && <PositionsMapDiagram />}
                                 {item.meshDiagram && <MeshPointDiagram />}
+                                {item.routeTreeDiagram && <RouteTreeDiagram />}
                                 <div style={{ fontSize: 13, color: TOKENS.inkSoft, lineHeight: 1.5, marginBottom: 8 }}>
                                   {item.description}
                                 </div>
