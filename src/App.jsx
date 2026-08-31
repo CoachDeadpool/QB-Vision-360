@@ -18,6 +18,160 @@ const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Oswal
 
 const SUBJECTS = [
   {
+    id: "glossary",
+    title: "Glossary & Rules",
+    icon: BookOpen,
+    blurb: "The CFL vocabulary every QB should know",
+    lessons: [
+      {
+        title: "Field dimensions and 12-man personnel",
+        items: [
+          { name: "Field width", description: "65 yards wide, versus 53.3 yards in the NFL.", note: "More sideline-to-sideline space to both defend and attack." },
+          { name: "Field length & end zones", description: "110 yards between goal lines, with 20-yard end zones on each end (150 yards total).", note: "Longer end zones change red zone strategy significantly." },
+          { name: "12 players per side", description: "Canadian football fields one more player per side than the American game.", note: "That extra player is almost always used as a receiver/blocker hybrid — the slotback." },
+        ],
+      },
+      {
+        title: "The three-down system and its impact",
+        items: [
+          { name: "Three downs to gain 10 yards", description: "CFL offenses get only three downs (versus four in the NFL/NCAA) to make a first down.", note: "This makes every first and second down more valuable — offenses take fewer conservative shots." },
+          { name: "Faster-paced game", description: "With fewer downs to work with, CFL offenses tend to throw more and play at a quicker tempo.", note: "Expect more passing concepts and less pure ball-control football." },
+        ],
+      },
+      {
+        title: "Pre-snap motion and the 1-yard DB rule",
+        items: [
+          { name: "Legal forward motion", description: "Unlike the NFL, CFL players can legally move forward (not just laterally) before the snap.", note: "Use it to diagnose coverage or gain a running start before the ball is snapped." },
+          { name: "1-yard neutral zone for DBs", description: "Defensive backs must line up at least one yard off the line of scrimmage before the snap.", note: "This creates a natural cushion for receivers at the start of every play." },
+        ],
+      },
+      {
+        title: "Common protections, audibles, and route trees",
+        items: [
+          { name: "Pass protection calls", description: "Pre-snap calls that tell the offensive line which gaps or rushers to prioritize.", note: "Know your protection before the snap so you know where your hot read lives if it breaks down." },
+          { name: "Audibles", description: "A new play or adjustment called at the line based on what the defense shows.", note: "Audibles are a tool, not a requirement — only change the play when you have a clear, confident read." },
+          { name: "Route tree", description: "A numbered system (e.g. 1 = flat, 9 = go) used to quickly communicate pass routes.", note: "Learning the route tree numbers speeds up play calls and reduces confusion in the huddle." },
+        ],
+      },
+      {
+        title: "General terms: leverage, gap, hash marks, and shorthand",
+        items: [
+          { name: "Leverage", description: "A defender's positioning relative to a receiver — inside, outside, or over top.", note: "Reading leverage tells you which way a receiver is likely to break open." },
+          { name: "Gap", description: "The space between two offensive linemen, labeled A through D gaps moving outward from the center.", note: "Run plays and blitzes are often named for which gap they attack." },
+          { name: "Hash marks", description: "The lines running down the middle of the field marking where the ball is placed to start each play.", note: "CFL hashes sit wider apart than NFL hashes, affecting field-side vs. boundary-side play design." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "positions",
+    title: "Positions on the Field",
+    icon: Users,
+    blurb: "Who lines up where, and what each job means",
+    lessons: [
+      {
+        title: "The offensive line: center, guards, and tackles",
+        items: [
+          { name: "Center", description: "Snaps the ball and typically makes protection calls for the line.", note: "Build a strong rapport with your center — they're often your first line of communication up front." },
+          { name: "Guards", description: "Line up on either side of the center, handling interior run blocking and pass protection.", note: "Interior pressure up the middle is usually the fastest threat to a QB — know your guards' matchups." },
+          { name: "Tackles", description: "Line up outside the guards, primarily responsible for edge protection.", note: "Your blindside tackle's matchup is one of the most important things to check pre-snap." },
+        ],
+      },
+      {
+        title: "Skill positions: QB, RB/FB, and receivers",
+        items: [
+          { name: "Running back / fullback", description: "Primary ball carriers and additional pass protectors out of the backfield.", note: "Know your back's protection assignment — it affects who you can trust to pick up a blitzer." },
+          { name: "Receivers / slotbacks", description: "Primary pass targets, with slotbacks adding a run-blocking element unique to the CFL's 12-man game.", note: "Understand each receiver's strengths — some win with speed, others with route precision." },
+        ],
+      },
+      {
+        title: "The defensive front and linebackers",
+        items: [
+          { name: "Defensive line", description: "Linemen responsible for stopping the run and rushing the passer directly across from the offensive line.", note: "Identify which defensive linemen are the real pass-rush threats pre-snap." },
+          { name: "Linebackers", description: "Play behind the line, responsible for run support, coverage, and blitzing.", note: "The Mike linebacker is usually your key pre-snap protection reference point." },
+        ],
+      },
+      {
+        title: "The secondary: cornerbacks, halfbacks, and safeties",
+        items: [
+          { name: "Cornerbacks", description: "Cover receivers on the outside, in either man or zone coverage.", note: "Watch their alignment depth — tight press coverage often signals man." },
+          { name: "Safeties (and CFL halfbacks)", description: "Play deep support, with the CFL's extra defensive back (halfback) adding another deep coverage option.", note: "Count the deep defenders before the snap — one versus two tells you a lot about the coverage shell." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "leadership",
+    title: "Leadership",
+    icon: Flag,
+    blurb: "Commanding the huddle and earning trust",
+    lessons: [
+      {
+        title: "Commanding the huddle and calling the play with confidence",
+        items: [
+          { name: "Clear, confident communication", description: "Calling the play loudly, clearly, and without hesitation builds trust in the huddle.", note: "Even if you're unsure, project confidence — hesitation in the huddle spreads to the whole offense." },
+        ],
+      },
+      {
+        title: "Staying composed under pressure and after mistakes",
+        items: [
+          { name: "The next-play mindset", description: "Treating every play — good or bad — as separate from the next one.", note: "Develop a short, personal reset routine (a breath, a phrase) to use after a mistake." },
+        ],
+      },
+      {
+        title: "Earning trust: accountability and leading by example",
+        items: [
+          { name: "Owning mistakes publicly", description: "Taking responsibility for errors in front of the team builds credibility, even when it's uncomfortable.", note: "Teammates trust QBs who hold themselves accountable first, before pointing elsewhere." },
+          { name: "Leading by example", description: "Showing up prepared, working hard in practice, and modeling the standard you expect from others.", note: "Your effort in practice sets the ceiling for how hard your teammates will work." },
+        ],
+      },
+      {
+        title: "Communicating with coaches, teammates, and officials",
+        items: [
+          { name: "Talking with coaches", description: "Clear, respectful communication about what you're seeing on the field helps coaches adjust the game plan.", note: "Bring information, not just problems — describe what you're seeing, not just what isn't working." },
+          { name: "Talking with officials", description: "Staying calm and respectful with officials, even after a tough call.", note: "Arguing with officials rarely changes a call and can cost your team a penalty — stay composed." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mentalgame",
+    title: "Mental Game & Confidence",
+    icon: Heart,
+    blurb: "The mindset behind the mechanics",
+    lessons: [
+      {
+        title: "Pre-game and pre-play routines",
+        note: "Do yourself a favor and put the phone down 90 minutes before a game, and 60 minutes before you go to sleep the night before. Also — lots of water.",
+        items: [
+          { name: "Visualization before the game", description: "Mentally rehearsing reads, throws, and situations before you ever step on the field.", note: "A few minutes of focused visualization the night before or morning of a game builds real familiarity with what you might see." },
+          { name: "A simple pre-play routine", description: "A short, repeatable habit — a breath, a cue word, a look at the sideline — used before every single snap.", note: "Consistency matters more than the specific routine — the same routine every play builds calm under pressure." },
+        ],
+      },
+      {
+        title: "Handling nerves and pressure",
+        items: [
+          { name: "Simple breathing techniques", description: "A slow, controlled breath (in for 4, hold for 4, out for 4) lowers physical tension in high-pressure moments.", note: "Practice this in low-stakes situations first so it's second nature when the game gets tense." },
+          { name: "Reframing nerves as readiness", description: "The physical feeling of nerves and the feeling of excitement are almost identical — the difference is how you label it.", note: "Telling yourself \"I'm excited\" instead of \"I'm nervous\" can genuinely change how you perform." },
+        ],
+      },
+      {
+        title: "Bouncing back after a mistake",
+        items: [
+          { name: "A short reset routine", description: "A physical or mental cue — a breath, a phrase, a glance at the sideline — used immediately after a mistake to move on.", note: "The goal isn't to forget the mistake, it's to stop it from affecting the very next play." },
+          { name: "Separate the play from your worth", description: "One incompletion or interception is information about that play, not a verdict on you as a player.", note: "The QBs who recover fastest treat mistakes as data, not identity." },
+        ],
+      },
+      {
+        title: "Building confidence through preparation",
+        items: [
+          { name: "Confidence comes from reps, not hype", description: "Real confidence is built through practice, film study, and repetition — not by trying to feel confident on command.", note: "If you're underprepared, no mental trick will replace the confidence that comes from doing the work." },
+          { name: "Trust your training in the moment", description: "In live action, the best QBs trust their preparation and react, rather than overthinking every decision.", note: "Overanalyzing in real time usually slows you down — trust the reps you've already put in." },
+        ],
+      },
+    ],
+  },
+  {
     id: "offense",
     title: "Offensive Concepts",
     icon: Zap,
@@ -711,89 +865,6 @@ const SUBJECTS = [
     ],
   },
   {
-    id: "positions",
-    title: "Positions on the Field",
-    icon: Users,
-    blurb: "Who lines up where, and what each job means",
-    lessons: [
-      {
-        title: "The offensive line: center, guards, and tackles",
-        items: [
-          { name: "Center", description: "Snaps the ball and typically makes protection calls for the line.", note: "Build a strong rapport with your center — they're often your first line of communication up front." },
-          { name: "Guards", description: "Line up on either side of the center, handling interior run blocking and pass protection.", note: "Interior pressure up the middle is usually the fastest threat to a QB — know your guards' matchups." },
-          { name: "Tackles", description: "Line up outside the guards, primarily responsible for edge protection.", note: "Your blindside tackle's matchup is one of the most important things to check pre-snap." },
-        ],
-      },
-      {
-        title: "Skill positions: QB, RB/FB, and receivers",
-        items: [
-          { name: "Running back / fullback", description: "Primary ball carriers and additional pass protectors out of the backfield.", note: "Know your back's protection assignment — it affects who you can trust to pick up a blitzer." },
-          { name: "Receivers / slotbacks", description: "Primary pass targets, with slotbacks adding a run-blocking element unique to the CFL's 12-man game.", note: "Understand each receiver's strengths — some win with speed, others with route precision." },
-        ],
-      },
-      {
-        title: "The defensive front and linebackers",
-        items: [
-          { name: "Defensive line", description: "Linemen responsible for stopping the run and rushing the passer directly across from the offensive line.", note: "Identify which defensive linemen are the real pass-rush threats pre-snap." },
-          { name: "Linebackers", description: "Play behind the line, responsible for run support, coverage, and blitzing.", note: "The Mike linebacker is usually your key pre-snap protection reference point." },
-        ],
-      },
-      {
-        title: "The secondary: cornerbacks, halfbacks, and safeties",
-        items: [
-          { name: "Cornerbacks", description: "Cover receivers on the outside, in either man or zone coverage.", note: "Watch their alignment depth — tight press coverage often signals man." },
-          { name: "Safeties (and CFL halfbacks)", description: "Play deep support, with the CFL's extra defensive back (halfback) adding another deep coverage option.", note: "Count the deep defenders before the snap — one versus two tells you a lot about the coverage shell." },
-        ],
-      },
-    ],
-  },
-  {
-    id: "glossary",
-    title: "Glossary & Rules",
-    icon: BookOpen,
-    blurb: "The CFL vocabulary every QB should know",
-    lessons: [
-      {
-        title: "Field dimensions and 12-man personnel",
-        items: [
-          { name: "Field width", description: "65 yards wide, versus 53.3 yards in the NFL.", note: "More sideline-to-sideline space to both defend and attack." },
-          { name: "Field length & end zones", description: "110 yards between goal lines, with 20-yard end zones on each end (150 yards total).", note: "Longer end zones change red zone strategy significantly." },
-          { name: "12 players per side", description: "Canadian football fields one more player per side than the American game.", note: "That extra player is almost always used as a receiver/blocker hybrid — the slotback." },
-        ],
-      },
-      {
-        title: "The three-down system and its impact",
-        items: [
-          { name: "Three downs to gain 10 yards", description: "CFL offenses get only three downs (versus four in the NFL/NCAA) to make a first down.", note: "This makes every first and second down more valuable — offenses take fewer conservative shots." },
-          { name: "Faster-paced game", description: "With fewer downs to work with, CFL offenses tend to throw more and play at a quicker tempo.", note: "Expect more passing concepts and less pure ball-control football." },
-        ],
-      },
-      {
-        title: "Pre-snap motion and the 1-yard DB rule",
-        items: [
-          { name: "Legal forward motion", description: "Unlike the NFL, CFL players can legally move forward (not just laterally) before the snap.", note: "Use it to diagnose coverage or gain a running start before the ball is snapped." },
-          { name: "1-yard neutral zone for DBs", description: "Defensive backs must line up at least one yard off the line of scrimmage before the snap.", note: "This creates a natural cushion for receivers at the start of every play." },
-        ],
-      },
-      {
-        title: "Common protections, audibles, and route trees",
-        items: [
-          { name: "Pass protection calls", description: "Pre-snap calls that tell the offensive line which gaps or rushers to prioritize.", note: "Know your protection before the snap so you know where your hot read lives if it breaks down." },
-          { name: "Audibles", description: "A new play or adjustment called at the line based on what the defense shows.", note: "Audibles are a tool, not a requirement — only change the play when you have a clear, confident read." },
-          { name: "Route tree", description: "A numbered system (e.g. 1 = flat, 9 = go) used to quickly communicate pass routes.", note: "Learning the route tree numbers speeds up play calls and reduces confusion in the huddle." },
-        ],
-      },
-      {
-        title: "General terms: leverage, gap, hash marks, and shorthand",
-        items: [
-          { name: "Leverage", description: "A defender's positioning relative to a receiver — inside, outside, or over top.", note: "Reading leverage tells you which way a receiver is likely to break open." },
-          { name: "Gap", description: "The space between two offensive linemen, labeled A through D gaps moving outward from the center.", note: "Run plays and blitzes are often named for which gap they attack." },
-          { name: "Hash marks", description: "The lines running down the middle of the field marking where the ball is placed to start each play.", note: "CFL hashes sit wider apart than NFL hashes, affecting field-side vs. boundary-side play design." },
-        ],
-      },
-    ],
-  },
-  {
     id: "filmstudy",
     title: "Film Study & Opponent Prep",
     icon: Video,
@@ -829,77 +900,6 @@ const SUBJECTS = [
           { name: "Set a consistent weekly schedule", description: "Watching film in short, regular sessions beats one long cram session before gameday.", note: "Even 20 minutes a day adds up to far more retained information than a single 2-hour session." },
           { name: "Watch with one purpose per session", description: "Focus each viewing on a single question — coverage tendencies one day, blitz tells the next — instead of trying to see everything at once.", note: "Trying to track too many things in one viewing usually means you really see none of them clearly." },
           { name: "Keep notes you'll actually use", description: "Write down what you find in a format you can reference quickly during the week and on gameday.", note: "Your notes are only as good as how usable they are in the moment you need them." },
-        ],
-      },
-    ],
-  },
-  {
-    id: "leadership",
-    title: "Leadership",
-    icon: Flag,
-    blurb: "Commanding the huddle and earning trust",
-    lessons: [
-      {
-        title: "Commanding the huddle and calling the play with confidence",
-        items: [
-          { name: "Clear, confident communication", description: "Calling the play loudly, clearly, and without hesitation builds trust in the huddle.", note: "Even if you're unsure, project confidence — hesitation in the huddle spreads to the whole offense." },
-        ],
-      },
-      {
-        title: "Staying composed under pressure and after mistakes",
-        items: [
-          { name: "The next-play mindset", description: "Treating every play — good or bad — as separate from the next one.", note: "Develop a short, personal reset routine (a breath, a phrase) to use after a mistake." },
-        ],
-      },
-      {
-        title: "Earning trust: accountability and leading by example",
-        items: [
-          { name: "Owning mistakes publicly", description: "Taking responsibility for errors in front of the team builds credibility, even when it's uncomfortable.", note: "Teammates trust QBs who hold themselves accountable first, before pointing elsewhere." },
-          { name: "Leading by example", description: "Showing up prepared, working hard in practice, and modeling the standard you expect from others.", note: "Your effort in practice sets the ceiling for how hard your teammates will work." },
-        ],
-      },
-      {
-        title: "Communicating with coaches, teammates, and officials",
-        items: [
-          { name: "Talking with coaches", description: "Clear, respectful communication about what you're seeing on the field helps coaches adjust the game plan.", note: "Bring information, not just problems — describe what you're seeing, not just what isn't working." },
-          { name: "Talking with officials", description: "Staying calm and respectful with officials, even after a tough call.", note: "Arguing with officials rarely changes a call and can cost your team a penalty — stay composed." },
-        ],
-      },
-    ],
-  },
-  {
-    id: "mentalgame",
-    title: "Mental Game & Confidence",
-    icon: Heart,
-    blurb: "The mindset behind the mechanics",
-    lessons: [
-      {
-        title: "Pre-game and pre-play routines",
-        note: "Do yourself a favor and put the phone down 90 minutes before a game, and 60 minutes before you go to sleep the night before. Also — lots of water.",
-        items: [
-          { name: "Visualization before the game", description: "Mentally rehearsing reads, throws, and situations before you ever step on the field.", note: "A few minutes of focused visualization the night before or morning of a game builds real familiarity with what you might see." },
-          { name: "A simple pre-play routine", description: "A short, repeatable habit — a breath, a cue word, a look at the sideline — used before every single snap.", note: "Consistency matters more than the specific routine — the same routine every play builds calm under pressure." },
-        ],
-      },
-      {
-        title: "Handling nerves and pressure",
-        items: [
-          { name: "Simple breathing techniques", description: "A slow, controlled breath (in for 4, hold for 4, out for 4) lowers physical tension in high-pressure moments.", note: "Practice this in low-stakes situations first so it's second nature when the game gets tense." },
-          { name: "Reframing nerves as readiness", description: "The physical feeling of nerves and the feeling of excitement are almost identical — the difference is how you label it.", note: "Telling yourself \"I'm excited\" instead of \"I'm nervous\" can genuinely change how you perform." },
-        ],
-      },
-      {
-        title: "Bouncing back after a mistake",
-        items: [
-          { name: "A short reset routine", description: "A physical or mental cue — a breath, a phrase, a glance at the sideline — used immediately after a mistake to move on.", note: "The goal isn't to forget the mistake, it's to stop it from affecting the very next play." },
-          { name: "Separate the play from your worth", description: "One incompletion or interception is information about that play, not a verdict on you as a player.", note: "The QBs who recover fastest treat mistakes as data, not identity." },
-        ],
-      },
-      {
-        title: "Building confidence through preparation",
-        items: [
-          { name: "Confidence comes from reps, not hype", description: "Real confidence is built through practice, film study, and repetition — not by trying to feel confident on command.", note: "If you're underprepared, no mental trick will replace the confidence that comes from doing the work." },
-          { name: "Trust your training in the moment", description: "In live action, the best QBs trust their preparation and react, rather than overthinking every decision.", note: "Overanalyzing in real time usually slows you down — trust the reps you've already put in." },
         ],
       },
     ],
@@ -2023,6 +2023,17 @@ export default function App() {
     setShowPasscodePrompt(true);
   }
 
+  function openCoachDashboard() {
+    if (coachUnlocked) {
+      setTab("coach");
+      return;
+    }
+    setPendingCoachAction("dashboard");
+    setPasscodeDraft("");
+    setPasscodeError(false);
+    setShowPasscodePrompt(true);
+  }
+
   function submitPasscode() {
     if (passcodeDraft === COACH_PASSCODE) {
       setCoachUnlocked(true);
@@ -2030,6 +2041,7 @@ export default function App() {
       if (pendingCoachAction === "quiz") setShowCoachView(true);
       else if (pendingCoachAction === "questions") setShowQuestionsCoachView(true);
       else if (pendingCoachAction === "film") setShowFilmCoachView(true);
+      else if (pendingCoachAction === "dashboard") setTab("coach");
       setPendingCoachAction(null);
     } else {
       setPasscodeError(true);
@@ -2162,6 +2174,17 @@ export default function App() {
             }}
           >
             <Heart size={11} /> Parents/Coaches
+          </button>
+          <button
+            onClick={openCoachDashboard}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 5, flexShrink: 0,
+              fontFamily: "'Oswald', sans-serif", fontSize: 11.5, fontWeight: 600, letterSpacing: 0.3,
+              color: TOKENS.gold, background: "transparent", border: `1px solid ${TOKENS.gold}`, borderRadius: 14,
+              padding: "6px 12px", cursor: "pointer",
+            }}
+          >
+            <Trophy size={11} /> Coach Dashboard
           </button>
         </div>
         <nav style={{ maxWidth: 960, margin: "0 auto", padding: "0 20px", display: "flex", gap: 2, overflowX: "auto", whiteSpace: "nowrap" }}>
@@ -3540,6 +3563,93 @@ export default function App() {
             )}
           </div>
         )}
+
+        {tab === "coach" && (() => {
+          if (!coachUnlocked) {
+            return (
+              <div style={{ textAlign: "center", padding: "60px 20px" }}>
+                <Trophy size={28} color={TOKENS.navyMid} style={{ marginBottom: 12 }} />
+                <div style={{ fontSize: 14, color: TOKENS.inkSoft, marginBottom: 16 }}>This section is locked.</div>
+                <button
+                  onClick={openCoachDashboard}
+                  style={{
+                    fontFamily: "'Oswald', sans-serif", fontSize: 13, fontWeight: 600,
+                    padding: "9px 18px", background: TOKENS.navyMid, color: TOKENS.gold, border: "none",
+                    borderRadius: 4, cursor: "pointer",
+                  }}
+                >
+                  Enter Passcode
+                </button>
+              </div>
+            );
+          }
+
+          const avgQuizPct = quizResults.length
+            ? Math.round((quizResults.reduce((sum, r) => sum + r.score / r.total, 0) / quizResults.length) * 100)
+            : null;
+
+          const statCards = [
+            { label: "Questions", value: questions.length, icon: MessageCircleQuestion },
+            { label: "Film Submissions", value: filmLog.length, icon: Play },
+            { label: "Quiz Attempts", value: quizResults.length, icon: Brain },
+            { label: "Feedback Items", value: feedbackList.length, icon: Heart },
+          ];
+
+          return (
+            <div>
+              <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
+                Coach Dashboard
+              </h1>
+              <p style={{ color: TOKENS.inkSoft, marginBottom: 22, fontSize: 14.5 }}>
+                Everything submitted across the app, in one place.
+              </p>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 26 }}>
+                {statCards.map((s) => {
+                  const Icon = s.icon;
+                  return (
+                    <div key={s.label} style={{ background: TOKENS.navyMid, borderRadius: 6, padding: "14px 16px", color: TOKENS.cream }}>
+                      <Icon size={15} color={TOKENS.gold} style={{ marginBottom: 6 }} />
+                      <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700 }}>{s.value}</div>
+                      <div style={{ fontSize: 11, color: TOKENS.creamLine }}>{s.label}</div>
+                    </div>
+                  );
+                })}
+                {avgQuizPct !== null && (
+                  <div style={{ background: TOKENS.navyMid, borderRadius: 6, padding: "14px 16px", color: TOKENS.cream }}>
+                    <Trophy size={15} color={TOKENS.gold} style={{ marginBottom: 6 }} />
+                    <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700 }}>{avgQuizPct}%</div>
+                    <div style={{ fontSize: 11, color: TOKENS.creamLine }}>Avg Quiz Score</div>
+                  </div>
+                )}
+              </div>
+
+              {[
+                { title: "Recent Questions", items: questions, render: (q) => (<><div style={{ fontSize: 13, lineHeight: 1.4 }}>{q.text}</div><div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: TOKENS.inkSoft, marginTop: 4 }}>{q.date} · {q.status}</div></>) },
+                { title: "Recent Film Submissions", items: filmLog, render: (f) => (<><div style={{ fontSize: 13, fontWeight: 600 }}>{f.name}</div>{f.notes && <div style={{ fontSize: 12.5, color: TOKENS.inkSoft, marginTop: 2 }}>{f.notes}</div>}{f.question && <div style={{ fontSize: 12.5, fontStyle: "italic", marginTop: 2 }}>Q: {f.question}</div>}<div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: TOKENS.inkSoft, marginTop: 4 }}>{f.date}</div></>) },
+                { title: "Recent Quiz Results", items: quizResults, render: (r) => (<><div style={{ fontSize: 13, fontWeight: 600 }}>{r.name} — {r.score}/{r.total}</div><div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: TOKENS.inkSoft, marginTop: 4 }}>{r.date}</div></>) },
+                { title: "Recent Feedback", items: feedbackList, render: (f) => (<><div style={{ fontSize: 13, fontWeight: 600 }}>{f.name}</div><div style={{ fontSize: 12.5, color: TOKENS.inkSoft, marginTop: 2 }}>{f.text}</div><div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: TOKENS.inkSoft, marginTop: 4 }}>{f.date}</div></>) },
+              ].map((section) => (
+                <div key={section.title} style={{ marginBottom: 24 }}>
+                  <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 600, marginBottom: 10, color: TOKENS.inkSoft, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    {section.title}
+                  </div>
+                  {section.items.length === 0 ? (
+                    <div style={{ fontSize: 13, color: TOKENS.inkSoft, fontStyle: "italic" }}>Nothing yet.</div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {section.items.slice(0, 8).map((item) => (
+                        <div key={item.id} style={{ background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6, padding: "10px 14px" }}>
+                          {section.render(item)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })()}
 
         {tab === "about" && (
           <div>
