@@ -2194,16 +2194,16 @@ export default function App() {
 
       {/* Header */}
       <header style={{ background: TOKENS.navyDeep, borderBottom: `3px solid ${TOKENS.gold}` }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "18px 20px", display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "18px 20px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <button
             onClick={() => { setTab("home"); setSelectedSubject(null); setExpandedLesson(null); }}
             style={{
-              display: "flex", alignItems: "center", gap: 14, flex: 1, background: "none", border: "none",
-              cursor: "pointer", padding: 0, textAlign: "left",
+              display: "flex", alignItems: "center", gap: 14, background: "none", border: "none",
+              cursor: "pointer", padding: 0, textAlign: "left", flexShrink: 0,
             }}
           >
             <CompassMark size={52} />
-            <div style={{ flex: 1 }}>
+            <div>
               <div style={{
                 fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: 1,
                 color: TOKENS.gold, lineHeight: 1.1,
@@ -2218,6 +2218,18 @@ export default function App() {
               </div>
             </div>
           </button>
+          <button
+            onClick={replayWalkthrough}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 7, flexShrink: 0,
+              fontFamily: "'Oswald', sans-serif", fontSize: 13.5, fontWeight: 700, letterSpacing: 0.3,
+              color: TOKENS.navyDeep, background: TOKENS.gold, border: "none", borderRadius: 18,
+              padding: "10px 18px", cursor: "pointer",
+            }}
+          >
+            <Play size={14} /> Take the Tour
+          </button>
+          <div style={{ flex: 1 }} />
           <button
             onClick={() => { setTab("about"); setSelectedSubject(null); setExpandedLesson(null); }}
             style={{
@@ -2301,14 +2313,14 @@ export default function App() {
                   Mechanics and football IQ, side by side — built specifically for young quarterbacks learning the Canadian game.
                 </p>
                 <button
-                  onClick={() => setTab(hasProfile ? "lessons" : "profile")}
+                  onClick={() => { if (hasProfile) { setTab("lessons"); } else { replayWalkthrough(); } }}
                   style={{
                     fontFamily: "'Oswald', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: 0.5,
                     padding: "12px 28px", background: TOKENS.gold, color: TOKENS.navyDeep, border: "none",
                     borderRadius: 5, cursor: "pointer",
                   }}
                 >
-                  {hasProfile ? "Continue Training" : "Get Started"}
+                  {hasProfile ? "Continue Training" : "Take the Tour"}
                 </button>
               </div>
 
@@ -2370,18 +2382,6 @@ export default function App() {
                   Tip: filling out your profile helps us tailor content to your age and skill level.
                 </div>
               )}
-
-              <div style={{ textAlign: "center", marginTop: 16 }}>
-                <button
-                  onClick={replayWalkthrough}
-                  style={{
-                    background: "none", border: "none", cursor: "pointer",
-                    fontSize: 12, color: TOKENS.inkSoft, textDecoration: "underline",
-                  }}
-                >
-                  Take the app tour again
-                </button>
-              </div>
 
               <div style={{ background: TOKENS.navyMid, border: `1px solid ${TOKENS.navyLine}`, borderRadius: 6, padding: 24, color: TOKENS.cream, marginTop: 28 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
