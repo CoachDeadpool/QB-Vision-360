@@ -1496,13 +1496,14 @@ function PositionsMapDiagram() {
     { x: 250, y: 200, label: "T", color: "#8a5730" },
     // Skill positions
     { x: 200, y: 216, label: "QB", color: "#b23a2c" }, { x: 232, y: 220, label: "RB", color: "#b23a2c" },
+    { x: 170, y: 214, label: "FB", color: "#b23a2c" },
     { x: 30, y: 195, label: "WR", color: "#b23a2c" }, { x: 370, y: 195, label: "WR", color: "#b23a2c" },
     { x: 90, y: 195, label: "SB", color: "#b23a2c" }, { x: 310, y: 195, label: "SB", color: "#b23a2c" },
     // Defensive front & linebackers
-    { x: 155, y: 158, label: "DL", color: "#6b5030" }, { x: 180, y: 155, label: "DL", color: "#6b5030" },
-    { x: 220, y: 155, label: "DL", color: "#6b5030" }, { x: 245, y: 158, label: "DL", color: "#6b5030" },
-    { x: 150, y: 128, label: "LB", color: "#c8a24a" }, { x: 200, y: 122, label: "LB", color: "#c8a24a" },
-    { x: 250, y: 128, label: "LB", color: "#c8a24a" },
+    { x: 155, y: 158, label: "DE", color: "#6b5030" }, { x: 180, y: 155, label: "N", color: "#6b5030" },
+    { x: 220, y: 155, label: "DT", color: "#6b5030" }, { x: 245, y: 158, label: "DE", color: "#6b5030" },
+    { x: 150, y: 128, label: "W", color: "#c8a24a" }, { x: 200, y: 122, label: "M", color: "#c8a24a" },
+    { x: 250, y: 128, label: "S", color: "#c8a24a" },
     // Secondary
     { x: 60, y: 92, label: "CB", color: "#3b6ea5" }, { x: 340, y: 92, label: "CB", color: "#3b6ea5" },
     { x: 115, y: 65, label: "HB", color: "#6b9c7a" }, { x: 285, y: 65, label: "HB", color: "#6b9c7a" },
