@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, TrendingUp, X as XIcon } from "lucide-react";
+import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, TrendingUp, Search as SearchIcon, X as XIcon } from "lucide-react";
 
 const TOKENS = {
   navyDeep: "#0f1d33",
@@ -1026,8 +1026,37 @@ const SUPPORT_URL = ""; // add a real Ko-fi / Buy Me a Coffee / PayPal.me link h
 // before relying on this for anything sensitive.
 const COACH_PASSCODE = "Oscar123";
 
+function buildSearchIndex() {
+  const entries = [];
+  SUBJECTS.forEach((subject) => {
+    subject.lessons.forEach((lesson, lessonIndex) => {
+      const lessonTitle = typeof lesson === "string" ? lesson : lesson.title;
+      const items = typeof lesson === "string" ? [] : lesson.items;
+      if (!items) return;
+      items.forEach((item) => {
+        const haystack = [
+          item.name, item.description, item.note, item.summary, item.keyText, item.qbRead, item.coachingKey,
+          lessonTitle, subject.title,
+        ].filter(Boolean).join(" ").toLowerCase();
+        entries.push({
+          subjectId: subject.id,
+          subjectTitle: subject.title,
+          subjectIcon: subject.icon,
+          lessonIndex,
+          lessonTitle,
+          itemName: item.name,
+          snippet: item.description || item.summary || item.note || "",
+          haystack,
+        });
+      });
+    });
+  });
+  return entries;
+}
+
 const WALKTHROUGH_STEPS = [
   { icon: null, title: "Welcome to QB Vision 360", body: "A quick look around before you dive in — this'll take about 30 seconds." },
+  { icon: SearchIcon, title: "Search", body: "Got a quick question, like \"what's a 4-3 defence?\" Search pulls it straight from the lessons — no scrolling required." },
   { icon: BookOpen, title: "Lessons", body: "13 subjects covering everything from mechanics to reading defenses — built specifically for the Canadian game." },
   { icon: Footprints, title: "Drills", body: "Log your reps and track progress on footwork, drop timing, pocket movement, and deep balls." },
   { icon: Brain, title: "Quiz", body: "Test yourself any time — a fresh mix of questions pulled from every subject." },
@@ -1931,6 +1960,7 @@ export default function App() {
   const [passcodeDraft, setPasscodeDraft] = useState("");
   const [passcodeError, setPasscodeError] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [walkthroughStep, setWalkthroughStep] = useState(0);
   const [plan, setPlan] = useState({ seasonGoal: "", focusAreas: [] });
   const [goalDraft, setGoalDraft] = useState("");
@@ -2170,6 +2200,12 @@ export default function App() {
     setShowWalkthrough(true);
   }
 
+  function goToSearchResult(result) {
+    setTab("lessons");
+    setSelectedSubject(result.subjectId);
+    setExpandedLesson(result.lessonIndex);
+  }
+
   function openCoachDashboard() {
     if (coachUnlocked) {
       setTab("coach");
@@ -2272,6 +2308,7 @@ export default function App() {
   }
 
   const navItems = [
+    { id: "search", label: "Search" },
     { id: "lessons", label: "Lessons" },
     { id: "drills", label: "Drills" },
     { id: "film", label: "Film Room" },
@@ -2382,6 +2419,7 @@ export default function App() {
           const hasProfile = profile.name && profile.name.trim();
 
           const quickLinks = [
+            { id: "search", label: "Search", icon: SearchIcon, desc: "Look something up" },
             { id: "lessons", label: "Lessons", icon: BookOpen, desc: `${SUBJECTS.length} subjects to explore` },
             { id: "drills", label: "Drills", icon: Footprints, desc: "Log your reps" },
             { id: "quiz", label: "Quiz", icon: Brain, desc: "Test yourself" },
@@ -2512,6 +2550,83 @@ export default function App() {
                   </p>
                 </div>
               </div>
+            </div>
+          );
+        })()}
+
+        {tab === "search" && (() => {
+          const q = searchQuery.trim().toLowerCase();
+          const index = buildSearchIndex();
+          const results = q.length < 2 ? [] : index.filter((e) => e.haystack.includes(q)).slice(0, 30);
+          return (
+            <div>
+              <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 26, fontWeight: 700, marginBottom: 4 }}>
+                Search
+              </h1>
+              <p style={{ color: TOKENS.inkSoft, marginBottom: 18, fontSize: 14.5 }}>
+                Search across every lesson — try "4-3 defence," "mesh," or "route tree."
+              </p>
+              <div style={{ position: "relative", marginBottom: 20 }}>
+                <SearchIcon size={16} color={TOKENS.inkSoft} style={{ position: "absolute", left: 12, top: 12 }} />
+                <input
+                  type="text"
+                  autoFocus
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="What do you want to look up?"
+                  style={{
+                    width: "100%", padding: "10px 12px 10px 38px", border: `1px solid ${TOKENS.creamLine}`,
+                    borderRadius: 6, fontFamily: "'Inter', sans-serif", fontSize: 14.5, boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              {q.length >= 2 && (
+                <div style={{ fontSize: 12.5, color: TOKENS.inkSoft, marginBottom: 12 }}>
+                  {results.length} result{results.length === 1 ? "" : "s"}
+                </div>
+              )}
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {results.map((r, i) => {
+                  const Icon = r.subjectIcon;
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => goToSearchResult(r)}
+                      style={{
+                        textAlign: "left", display: "flex", gap: 12, alignItems: "flex-start",
+                        background: "#fff", border: `1px solid ${TOKENS.creamLine}`, borderRadius: 6,
+                        padding: "12px 14px", cursor: "pointer",
+                      }}
+                    >
+                      <div style={{
+                        width: 32, height: 32, borderRadius: "50%", background: TOKENS.navyMid, flexShrink: 0,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        {Icon && <Icon size={14} color={TOKENS.gold} />}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 14.5, fontWeight: 600 }}>
+                          {r.itemName}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: TOKENS.gold, marginBottom: 3, fontFamily: "'IBM Plex Mono', monospace" }}>
+                          {r.subjectTitle} · {r.lessonTitle}
+                        </div>
+                        <div style={{ fontSize: 12.5, color: TOKENS.inkSoft, lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {r.snippet}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {q.length >= 2 && results.length === 0 && (
+                <div style={{ fontSize: 13.5, color: TOKENS.inkSoft, fontStyle: "italic", textAlign: "center", padding: "20px 0" }}>
+                  No matches yet — try a different word or check the Lessons tab.
+                </div>
+              )}
             </div>
           );
         })()}
