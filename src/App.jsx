@@ -1274,6 +1274,13 @@ const EXAMPLE_FILMS = [
     videoId: "T09sWj6wpwU",
   },
   {
+    id: "presnap",
+    subjectLabel: "Pre-Snap Reads",
+    title: "How to Read Defences From a QB's Perspective",
+    channel: "YouTube",
+    videoId: "w3I4T65pD7c",
+  },
+  {
     id: "mechanics",
     subjectLabel: "QB Mechanics",
     title: "QBMotion — Rob Williams",
@@ -1297,9 +1304,9 @@ const EXAMPLE_FILMS = [
   {
     id: "positions",
     subjectLabel: "Positions on the Field",
-    title: "Every Position in American Football Explained",
+    title: "Football Positions Explained: Offense - CFL",
     channel: "YouTube",
-    videoId: "kfoYKISSf-M",
+    videoId: "VZVD4Z9taCk",
   },
   {
     id: "glossary",
