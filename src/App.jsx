@@ -1288,6 +1288,20 @@ const EXAMPLE_FILMS = [
     channelUrl: "https://youtube.com/@QBMotion",
   },
   {
+    id: "mechanics",
+    subjectLabel: "QB Mechanics",
+    title: "Tom House on QB Throwing Mechanics",
+    channel: "YouTube",
+    videoId: "w2V8b7O1Jag",
+  },
+  {
+    id: "mechanics",
+    subjectLabel: "QB Mechanics",
+    title: "Intro to QB Mechanics with Tom House & Adam Dedeaux",
+    channel: "3DQB",
+    videoId: "XmGFMoCxLW8",
+  },
+  {
     id: "drillsfootwork",
     subjectLabel: "Drills & Footwork",
     title: "8 New QB Footwork Drills",
