@@ -665,7 +665,7 @@ const SUBJECTS = [
       },
       {
         title: "Coaches & creators we recommend",
-        note: "These are outside creators, not part of QB Vision 360 — worth following for extra reps and perspective on mechanics.",
+        note: "These are outside creators, not part of QB Vision — worth following for extra reps and perspective on mechanics.",
         items: [
           { kind: "creator", name: "QBMotion", handle: "@QBMotion", platform: "YouTube", url: "https://youtube.com/@QBMotion", description: "Rob Williams, QB movement kinesiologist — works with CFL, NFL, and NCAA quarterbacks on throwing mechanics." },
           { kind: "creator", name: "First Down Training", handle: "@firstdowntraining", platform: "YouTube", url: "https://www.youtube.com/@firstdowntraining", description: "Grant Caraway's QB/WR training channel — footwork, mechanics, and camp-style drill work." },
@@ -1055,7 +1055,7 @@ function buildSearchIndex() {
 }
 
 const WALKTHROUGH_STEPS = [
-  { icon: null, title: "Welcome to QB Vision 360", body: "A quick look around before you dive in — this'll take about 30 seconds." },
+  { icon: null, title: "Welcome to QB Vision", body: "A quick look around before you dive in — this'll take about 30 seconds." },
   { icon: SearchIcon, title: "Search", body: "Got a quick question, like \"what's a 4-3 defence?\" Search pulls it straight from the lessons — no scrolling required." },
   { icon: BookOpen, title: "Lessons", body: "13 subjects covering everything from mechanics to reading defenses — built specifically for the Canadian game." },
   { icon: Footprints, title: "Drills", body: "Log your reps and track progress on footwork, drop timing, pocket movement, and deep balls." },
@@ -1116,7 +1116,7 @@ const DRILLS = [
 ];
 
 function CompassMark({ size = 40 }) {
-  // Cropped to the circular emblem from the official QB Vision 360 logo artwork
+  // Cropped to the circular emblem from the official QB Vision logo artwork
   // (original bounding box of the compass circle: cx=340 cy=195 r=150)
   return (
     <svg width={size} height={size} viewBox="190 45 300 300" aria-hidden="true">
@@ -2360,7 +2360,7 @@ export default function App() {
                 fontFamily: "'Oswald', sans-serif", fontSize: 22, fontWeight: 700, letterSpacing: 1,
                 color: TOKENS.gold, lineHeight: 1.1,
               }}>
-                QB VISION 360
+                QB VISION
               </div>
               <div style={{
                 fontFamily: "'IBM Plex Mono', monospace", fontSize: 10.5, letterSpacing: 2,
@@ -2457,7 +2457,7 @@ export default function App() {
                   <CompassMark size={76} />
                 </div>
                 <div style={{ fontFamily: "'Oswald', sans-serif", fontSize: 15, fontWeight: 600, color: TOKENS.gold, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" }}>
-                  {hasProfile ? `Welcome back, ${profile.name.split(" ")[0]}` : "Welcome to QB Vision 360"}
+                  {hasProfile ? `Welcome back, ${profile.name.split(" ")[0]}` : "Welcome to QB Vision"}
                 </div>
                 <h1 style={{ fontFamily: "'Oswald', sans-serif", fontSize: 27, fontWeight: 700, margin: "0 0 12px" }}>
                   See the field. Read the game.
@@ -2564,7 +2564,7 @@ export default function App() {
                     Because I work in AI and technology, it seemed like a great chance to build this app myself.
                   </p>
                   <p style={{ margin: 0 }}>
-                    QB Vision 360 came out of that gap — a place for young quarterbacks to build both the mechanics and the football IQ side by side, built specifically for the Canadian game.
+                    QB Vision came out of that gap — a place for young quarterbacks to build both the mechanics and the football IQ side by side, built specifically for the Canadian game.
                   </p>
                   <p style={{ margin: 0 }}>
                     Football has given me a lot, and I hope to give back.
@@ -3380,7 +3380,7 @@ export default function App() {
                 <Send size={14} /> Submit Question
               </button>
               <div style={{ fontSize: 11, color: TOKENS.inkSoft, marginTop: 10, fontStyle: "italic" }}>
-                Submitted questions are shared and reviewed by the coach behind QB Vision 360.
+                Submitted questions are shared and reviewed by the coach behind QB Vision.
               </div>
             </div>
 
@@ -4067,7 +4067,7 @@ export default function App() {
                 Send Feedback
               </button>
               <div style={{ fontSize: 11, color: TOKENS.inkSoft, marginTop: 10, fontStyle: "italic" }}>
-                Submitted feedback is shared and reviewed by the coach behind QB Vision 360.
+                Submitted feedback is shared and reviewed by the coach behind QB Vision.
               </div>
               {feedbackList.length > 0 && (
                 <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${TOKENS.creamLine}` }}>
@@ -4097,7 +4097,7 @@ export default function App() {
                 Support This Project
               </div>
               <p style={{ fontSize: 13, color: TOKENS.inkSoft, marginBottom: 14 }}>
-                QB Vision 360 is built and maintained independently. If it's helped your player, you're welcome to support it here.
+                QB Vision is built and maintained independently. If it's helped your player, you're welcome to support it here.
               </p>
               {SUPPORT_URL ? (
                 <a
@@ -4110,7 +4110,7 @@ export default function App() {
                     background: TOKENS.navyMid, color: TOKENS.gold, borderRadius: 4, padding: "9px 18px",
                   }}
                 >
-                  <Heart size={13} /> Support QB Vision 360
+                  <Heart size={13} /> Support QB Vision
                 </a>
               ) : (
                 <span style={{ fontSize: 12, color: TOKENS.inkSoft, fontStyle: "italic" }}>
