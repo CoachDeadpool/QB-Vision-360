@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Shield, Zap, Eye, Activity, Footprints, BookOpen, Users, Route, Flag, Video, Heart, Timer, Snowflake, RefreshCw, Check, Upload, Plus, ChevronLeft, Play, MessageCircleQuestion, Send, Clock, User, Pencil, Brain, Trophy, Target, CheckSquare, Award, Lock, TrendingUp, Search as SearchIcon, X as XIcon } from "lucide-react";
+import PlayBuilder from "./PlayBuilder.jsx";
 
 const TOKENS = {
   navyDeep: "#0f1d33",
@@ -2333,6 +2334,7 @@ export default function App() {
     { id: "lessons", label: "Lessons" },
     { id: "drills", label: "Drills" },
     { id: "film", label: "Film Room" },
+    { id: "playbuilder", label: "Play Builder" },
     { id: "quiz", label: "Quiz" },
     { id: "questions", label: "Ask Coach" },
     { id: "plan", label: "Build a Plan" },
@@ -2444,6 +2446,7 @@ export default function App() {
             { id: "lessons", label: "Lessons", icon: BookOpen, desc: `${SUBJECTS.length} subjects to explore` },
             { id: "drills", label: "Drills", icon: Footprints, desc: "Log your reps" },
             { id: "quiz", label: "Quiz", icon: Brain, desc: "Test yourself" },
+            { id: "playbuilder", label: "Play Builder", icon: Pencil, desc: "Turn sketches into Word docs" },
             { id: "plan", label: "Build a Plan", icon: Target, desc: "Set your goal" },
           ];
 
@@ -2990,6 +2993,10 @@ export default function App() {
               })}
             </div>
           </div>
+        )}
+
+        {tab === "playbuilder" && (
+          <PlayBuilder tokens={TOKENS} playerName={(profile.name || "").trim()} />
         )}
 
         {tab === "film" && (
