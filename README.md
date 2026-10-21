@@ -1,4 +1,4 @@
-# QB Vision 360
+# QB Vision
 
 A training app for young Canadian football quarterbacks — lessons, drills, film
 review, a self-quiz, and a personal development plan. Built by Dan Carnevale
